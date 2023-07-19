@@ -1,0 +1,53 @@
+=================================
+ LÓGICA DA CONVOCAÇÃO NO MOBILE:
+=================================
+
+- Ao ENTRAR na CONVOCAÇÃO:
+    - Busca por serviço EM EXECUÇÃO
+        - ENCONTROU         - Chama a tela correspondente
+                            - Caso não consiga chamar, inicia CONVOCADOR
+    
+        - NÃO ENCONTROU     - Inicia o CONVOCADOR
+
+- Ao INICIAR o CONVOCADOR: 
+    - Avisa ao CONVOCADOR que o status do OPERADOR é LIVRE
+    - Procura em POOLING por serviço disponíveis, caso encontre, espera ação do OPERADOR
+        - Enquanto espera, vibra e toca um beep
+        - Tem duas ações possíveis:
+            - ACEITAR   - Chama a tela correspondente
+                        - Caso não consiga chamar, volta a procurar serviço
+
+            - RECUSAR   - Avisa ao CONVOCADOR que o serviço foi rejeitado
+                        - volta a procurar por serviço
+
+- Caso a tela do CONVOCADOR entre em espera (saiu do SAGA sem finalizar ou abriu algum menu)
+    - Avisa ao Convocador que o status do OPERADOR é OCUPADO
+    - Para a procura por serviço até que retorne a tela
+
+=================================
+ ENTENDENDO O TIMER PERIODIC:
+=================================
+
+- O Timer.periodic realiza uma função em tempo determinado.
+
+- No caso da Convocação, ele chama uma atividade de um em um segundo.
+    - Isso implica que ele fara a função e contara um segundo para fazer novamente, 
+      não que tentara fazer em um segundo.
+
+- O Timer.periodic precisa ser cancelado caso finalize a tela ou caso mude de tela.
+
+- IMPORTANTE: O TIMER NÃO PARA AUTOMATICAMENTE!!!
+
+=================================
+ ENTENDENDO O VALUE NOTIFIER:
+=================================
+
+- É uma extensão de ChangerNotifier, já nativo do Flutter.
+
+- É um Observador. Ele espera um novo valor, ao receber, 
+  caso seja diferente do valor já alocado, ele notifica seus ouvintes sobre a mudança.
+
+- Seu ouvinte, no caso da Convocação, é o ValueListenableBuilder.
+
+- O ValueListenableBuilder, ao ser notificado sobre uma mudança no Observador, builda apenas a si mesmo, 
+  dessa forma, não é necessário buildar a tela inteira com o SetState.
